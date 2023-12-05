@@ -1,9 +1,8 @@
-#include <stdio.h>
 #include <stdint.h>
+#include <stdio.h>
 
-int part_one()
-{
-	FILE *fptr;
+int part_one() {
+	FILE* fptr;
 
 	fptr = fopen("input", "r");
 
@@ -44,51 +43,46 @@ int part_one()
 }
 
 // I dont want to have to end with a \0, to save 1 byte
-int get_window_number(char *window, int length)
-{
-	if (window[1] == 'z' && window[2] == 'e' && window[3] == 'r'
-	    && window[4] == 'o')
+int get_window_number(char* window, int length) {
+	if (window[1] == 'z' && window[2] == 'e' && window[3] == 'r' &&
+		window[4] == 'o')
 		return 0;
 
-	if (window[2] == 'o' && window[3] == 'n' && window[4] == 'e')
-		return 1;
+	if (window[2] == 'o' && window[3] == 'n' && window[4] == 'e') return 1;
 
-	if (window[2] == 't' && window[3] == 'w' && window[4] == 'o')
-		return 2;
+	if (window[2] == 't' && window[3] == 'w' && window[4] == 'o') return 2;
 
-	if (window[0] == 't' && window[1] == 'h' && window[2] == 'r'
-	    && window[3] == 'e' && window[4] == 'e')
+	if (window[0] == 't' && window[1] == 'h' && window[2] == 'r' &&
+		window[3] == 'e' && window[4] == 'e')
 		return 3;
 
-	if (window[1] == 'f' && window[2] == 'o' && window[3] == 'u'
-	    && window[4] == 'r')
+	if (window[1] == 'f' && window[2] == 'o' && window[3] == 'u' &&
+		window[4] == 'r')
 		return 4;
 
-	if (window[1] == 'f' && window[2] == 'i' && window[3] == 'v'
-	    && window[4] == 'e')
+	if (window[1] == 'f' && window[2] == 'i' && window[3] == 'v' &&
+		window[4] == 'e')
 		return 5;
 
-	if (window[2] == 's' && window[3] == 'i' && window[4] == 'x')
-		return 6;
+	if (window[2] == 's' && window[3] == 'i' && window[4] == 'x') return 6;
 
-	if (window[0] == 's' && window[1] == 'e' && window[2] == 'v'
-	    && window[3] == 'e' && window[4] == 'n')
+	if (window[0] == 's' && window[1] == 'e' && window[2] == 'v' &&
+		window[3] == 'e' && window[4] == 'n')
 		return 7;
 
-	if (window[0] == 'e' && window[1] == 'i' && window[2] == 'g'
-	    && window[3] == 'h' && window[4] == 't')
+	if (window[0] == 'e' && window[1] == 'i' && window[2] == 'g' &&
+		window[3] == 'h' && window[4] == 't')
 		return 8;
 
-	if (window[1] == 'n' && window[2] == 'i' && window[3] == 'n'
-	    && window[4] == 'e')
+	if (window[1] == 'n' && window[2] == 'i' && window[3] == 'n' &&
+		window[4] == 'e')
 		return 9;
 
 	return -1;
 }
 
-int part_two()
-{
-	FILE *fptr;
+int part_two() {
+	FILE* fptr;
 
 	fptr = fopen("input", "r");
 
@@ -116,8 +110,7 @@ int part_two()
 
 			uint8_t num = text[i] - 48;
 
-			int window_number =
-			    get_window_number(window, sizeof(window));
+			int window_number = get_window_number(window, sizeof(window));
 			if (window_number > -1) {
 				num = window_number;
 			}
@@ -141,11 +134,9 @@ int part_two()
 	return 0;
 }
 
-int main()
-{
+int main() {
 	if (part_one() || part_two()) {
 		return 1;
 	}
 	return 0;
-
 }

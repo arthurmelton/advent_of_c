@@ -1,12 +1,11 @@
-#include <stdio.h>
 #include <stdint.h>
+#include <stdio.h>
 
 // 5 or 10
 #define FIRST_NUMBER_COUNT 10
 
-int part_one()
-{
-	FILE *fptr;
+int part_one() {
+	FILE* fptr;
 
 	fptr = fopen("input", "r");
 
@@ -22,7 +21,7 @@ int part_one()
 	int num_done = 0;
 	int score = 1;
 
-	char buffer[1024] = { 0 };
+	char buffer[1024] = {0};
 
 	int read = 0;
 
@@ -33,13 +32,11 @@ int part_one()
 			if (num < 10) {
 				current_num *= 10;
 				current_num += num;
-			} else if ((buffer[i] == ' ' || buffer[i] == '\n')
-				   && current_num) {
+			} else if ((buffer[i] == ' ' || buffer[i] == '\n') && current_num) {
 				if (!past_first) {
 					winners[num_done] = current_num;
 				} else {
-					for (int x = 0; x < FIRST_NUMBER_COUNT;
-					     x++) {
+					for (int x = 0; x < FIRST_NUMBER_COUNT; x++) {
 						if (current_num == winners[x]) {
 							score *= 2;
 							break;
@@ -70,9 +67,8 @@ int part_one()
 	return 0;
 }
 
-int part_two()
-{
-	FILE *fptr;
+int part_two() {
+	FILE* fptr;
 
 	fptr = fopen("input", "r");
 
@@ -83,13 +79,13 @@ int part_two()
 
 	int total = 0;
 	int winners[FIRST_NUMBER_COUNT];
-	int cards[FIRST_NUMBER_COUNT + 1] = {[0 ... FIRST_NUMBER_COUNT] = 1 };
+	int cards[FIRST_NUMBER_COUNT + 1] = {[0 ... FIRST_NUMBER_COUNT] = 1};
 	int current_num = 0;
 	int past_first = 0;
 	int num_done = 0;
 	int score = 0;
 
-	char buffer[1024] = { 0 };
+	char buffer[1024] = {0};
 
 	int read = 0;
 
@@ -100,13 +96,11 @@ int part_two()
 			if (num < 10) {
 				current_num *= 10;
 				current_num += num;
-			} else if ((buffer[i] == ' ' || buffer[i] == '\n')
-				   && current_num) {
+			} else if ((buffer[i] == ' ' || buffer[i] == '\n') && current_num) {
 				if (!past_first) {
 					winners[num_done] = current_num;
 				} else {
-					for (int x = 0; x < FIRST_NUMBER_COUNT;
-					     x++) {
+					for (int x = 0; x < FIRST_NUMBER_COUNT; x++) {
 						if (current_num == winners[x]) {
 							score += 1;
 							break;
@@ -121,17 +115,13 @@ int part_two()
 					int current_count = cards[0];
 					total += current_count;
 					for (int x = 0; x < score; x++) {
-						cards[x] =
-						    cards[x + 1] +
-						    current_count;
+						cards[x] = cards[x + 1] + current_count;
 					}
-					for (int x = score;
-					     x < FIRST_NUMBER_COUNT; x++) {
+					for (int x = score; x < FIRST_NUMBER_COUNT; x++) {
 						cards[x] = cards[x + 1];
 					}
 
-					cards[sizeof(cards) / sizeof(*cards) -
-					      1] = 1;
+					cards[sizeof(cards) / sizeof(*cards) - 1] = 1;
 
 					num_done = 0;
 					score = 0;
@@ -152,8 +142,7 @@ int part_two()
 	return 0;
 }
 
-int main()
-{
+int main() {
 	if (part_one() || part_two()) {
 		return 1;
 	}

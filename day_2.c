@@ -1,13 +1,12 @@
-#include <stdio.h>
 #include <stdint.h>
+#include <stdio.h>
 
 #define POSSIBLE_RED 12
 #define POSSIBLE_GREEN 13
 #define POSSIBLE_BLUE 14
 
-int part_one()
-{
-	FILE *fptr;
+int part_one() {
+	FILE* fptr;
 
 	fptr = fopen("input", "r");
 
@@ -49,9 +48,9 @@ int part_one()
 					}
 				} else if (text[i] == '\n') {
 					i += 5;
-					if (max_red <= POSSIBLE_RED
-					    && max_green <= POSSIBLE_GREEN
-					    && max_blue <= POSSIBLE_BLUE) {
+					if (max_red <= POSSIBLE_RED &&
+						max_green <= POSSIBLE_GREEN &&
+						max_blue <= POSSIBLE_BLUE) {
 						id_sums += current_game;
 					}
 					max_red = 0;
@@ -70,9 +69,8 @@ int part_one()
 	return 0;
 }
 
-int part_two()
-{
-	FILE *fptr;
+int part_two() {
+	FILE* fptr;
 
 	fptr = fopen("input", "r");
 
@@ -111,8 +109,7 @@ int part_two()
 					}
 				} else if (text[i] == '\n') {
 					i += 5;
-					power_sums +=
-					    min_red * min_green * min_blue;
+					power_sums += min_red * min_green * min_blue;
 					min_red = 0;
 					min_green = 0;
 					min_blue = 0;
@@ -129,8 +126,7 @@ int part_two()
 	return 0;
 }
 
-int main()
-{
+int main() {
 	if (part_one() || part_two()) {
 		return 1;
 	}
