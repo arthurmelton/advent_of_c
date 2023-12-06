@@ -5,7 +5,7 @@
 #define FIRST_NUMBER_COUNT 10
 
 int part_one() {
-	FILE* fptr;
+	FILE* frtr;
 
 	fptr = fopen("input", "r");
 
