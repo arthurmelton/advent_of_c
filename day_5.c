@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// 4 or 20
 #define SEEDS_COUNT 20
 
 int part_one() {
@@ -91,112 +92,110 @@ int part_two() {
 		return 1;
 	}
 
-	char buffer[1024] = {0};
+	fseek(fptr, 0L, SEEK_END);
+	int file_size = ftell(fptr);
+	rewind(fptr);
 
-	int first_seeds[SEEDS_COUNT] = {0};
+	char *buffer = malloc(file_size);
 
-	uint32_t *seeds = NULL;
-	int seeds_length = 0;
-
-	int *edited = NULL;
+	uint64_t seeds[SEEDS_COUNT] = {0};
+	uint64_t lowests[SEEDS_COUNT/2] = {[0 ... SEEDS_COUNT/2-1] -1};
 	int seed_id = 0;
+	
+	uint64_t *real_seeds = NULL;
+	int *edited = NULL;
 
-	int read = 0;
-
-	uint32_t nums[3] = {-1, -1, -1};
+	uint64_t nums[3] = {-1, -1, -1};
 	int id = 0;
 
-	while ((read = fread(buffer, 1, sizeof(buffer), fptr))) {
-		for (int i = 0; i < read; i++) {
-			printf("%d - %c\n", i, buffer[i]);
-			uint8_t num = buffer[i] - 48;
+	int through = 0;
 
-			if (num < 10) {
-				if (nums[id] == -1) {
-					nums[id] = 0;
+	int after_seeds = 0;
+
+	fread(buffer, 1, file_size, fptr);
+
+	for (int i = 0; i < file_size; i++) {
+		uint8_t num = buffer[i] - 48;
+		if (num < 10) {
+			if (nums[id] == -1) {
+				nums[id] = 0;
+			}
+
+			nums[id] *= 10;
+			nums[id] += num;
+		} else if (buffer[i] == ' ' || buffer[i] == '\n') {
+			if (!after_seeds && seed_id == SEEDS_COUNT) after_seeds = i;
+			if (through == SEEDS_COUNT/2 + 1) break;
+			if (seed_id == SEEDS_COUNT && (i == file_size-1 || through == 0)) {
+				if (through != 0) {
+					for (int x = 0; x < seeds[(through-1)*2+1]; x++) {
+						if (real_seeds[x] < lowests[through-1]) lowests[through-1] = real_seeds[x];
+					}
 				}
 
-				nums[id] *= 10;
-				nums[id] += num;
-			} else if (buffer[i] == ' ' || buffer[i] == '\n') {
-				if (seed_id != SEEDS_COUNT && nums[0] != -1) {
-					first_seeds[seed_id] = nums[0];
-					seed_id++;
+				i = after_seeds;
+				through++;
+				if (through > SEEDS_COUNT/2) break;
 
-					if (seed_id == SEEDS_COUNT) {
-						int size = 0;
-						for (int x = 0; x < SEEDS_COUNT / 2; x++) {
-							size += first_seeds[x * 2 + 1];
-						}
-						seeds_length = size;
+				free(real_seeds);
+				free(edited);
 
-						printf("%d\n", size);
+				real_seeds = malloc(seeds[(through-1)*2+1] * sizeof(uint64_t));
+				edited = malloc(seeds[(through-1)*2+1] * sizeof(int));
 
-						seeds = (uint32_t *)malloc(size * sizeof(uint32_t));
-						edited = (int *)malloc(size * sizeof(int));
+				for (int x = 0; x < seeds[(through-1)*2+1]; x++) {
+					real_seeds[x] = seeds[(through-1)*2] + x;
+				}
 
-						if (seeds == 0) {
-							printf(
-								"Could not allocate %ld bytes (first iteration "
-								"of it)\n",
-								size * sizeof(uint32_t));
-							return 0;
-						}
+				for (int x = 0; x < 3; x++) {
+					nums[x] = -1;
+				}
 
-						if (edited == 0) {
-							printf(
-								"Could not allocate %ld bytes (second "
-								"iteration of it)\n",
-								size * sizeof(uint32_t));
-							return 0;
-						}
+				id = 0;
 
-						int done = 0;
-						for (int x = 0; x < SEEDS_COUNT / 2; x++) {
-							for (int y = 0; y < first_seeds[x * 2 + 1]; y++) {
-								seeds[done] = first_seeds[x * 2] + y;
-								edited[done] = 0;
-								done++;
-							}
+				continue;
+			}
+
+			if (seed_id != SEEDS_COUNT && nums[0] != -1) {
+				seeds[seed_id] = nums[0];
+				seed_id++;
+
+				nums[0] = -1;
+			} else if (nums[0] != -1) {
+				if (buffer[i] == '\n') {
+					for (int x = 0; x < seeds[(through-1)*2+1]; x++) {
+						if (!edited[x] && real_seeds[x] >= nums[1] &&
+							real_seeds[x] < nums[1] + nums[2]) {
+							real_seeds[x] = real_seeds[x] - nums[1] + nums[0];
+							edited[x] = 1;
 						}
 					}
 
-					nums[0] = -1;
-				} else if (nums[0] != -1) {
-					if (buffer[i] == '\n') {
-						for (int x = 0; x < seeds_length; x++) {
-							if (!edited[x] && seeds[x] >= nums[1] &&
-								seeds[x] < nums[1] + nums[2]) {
-								seeds[x] = seeds[x] - nums[1] + nums[0];
-								edited[x] = 1;
-							}
-						}
-
-						for (int x = 0; x < 3; x++) {
-							nums[x] = -1;
-						}
+					for (int x = 0; x < 3; x++) {
+						nums[x] = -1;
 					}
-					id = (id + 1) % 3;
 				}
-			} else if (buffer[i] == ':') {
-				for (int x = 0; x < seeds_length; x++) {
-					edited[x] = 0;
-				}
+				id = (id + 1) % 3;
+			}
+		} else if (buffer[i] == ':' && seed_id == SEEDS_COUNT) {
+			for (int x = 0; x < seeds[(through-1)*2+1]; x++) {
+				edited[x] = 0;
 			}
 		}
 	}
 
 	fclose(fptr);
+	free(real_seeds);
+	free(edited);
 
-	uint32_t min = -1;
 
-	for (int i = 0; i < seeds_length; i++) {
-		if (seeds[i] < min) {
-			min = seeds[i];
+	uint64_t min = -1;
+
+	for (int i = 0; i < SEEDS_COUNT/2; i++) {
+		if (lowests[i] < min) {
+			min = lowests[i];
 		}
 	}
-
-	free(seeds);
 
 	printf("Min: %ld\n", min);
 
