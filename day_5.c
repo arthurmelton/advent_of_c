@@ -99,9 +99,9 @@ int part_two() {
 	char *buffer = malloc(file_size);
 
 	uint64_t seeds[SEEDS_COUNT] = {0};
-	uint64_t lowests[SEEDS_COUNT/2] = {[0 ... SEEDS_COUNT/2-1] -1};
+	uint64_t lowests[SEEDS_COUNT / 2] = {[0 ... SEEDS_COUNT / 2 - 1] - 1};
 	int seed_id = 0;
-	
+
 	uint64_t *real_seeds = NULL;
 	int *edited = NULL;
 
@@ -125,26 +125,29 @@ int part_two() {
 			nums[id] += num;
 		} else if (buffer[i] == ' ' || buffer[i] == '\n') {
 			if (!after_seeds && seed_id == SEEDS_COUNT) after_seeds = i;
-			if (through == SEEDS_COUNT/2 + 1) break;
-			if (seed_id == SEEDS_COUNT && (i == file_size-1 || through == 0)) {
+			if (through == SEEDS_COUNT / 2 + 1) break;
+			if (seed_id == SEEDS_COUNT &&
+				(i == file_size - 1 || through == 0)) {
 				if (through != 0) {
-					for (int x = 0; x < seeds[(through-1)*2+1]; x++) {
-						if (real_seeds[x] < lowests[through-1]) lowests[through-1] = real_seeds[x];
+					for (int x = 0; x < seeds[(through - 1) * 2 + 1]; x++) {
+						if (real_seeds[x] < lowests[through - 1])
+							lowests[through - 1] = real_seeds[x];
 					}
 				}
 
 				i = after_seeds;
 				through++;
-				if (through > SEEDS_COUNT/2) break;
+				if (through > SEEDS_COUNT / 2) break;
 
 				free(real_seeds);
 				free(edited);
 
-				real_seeds = malloc(seeds[(through-1)*2+1] * sizeof(uint64_t));
-				edited = malloc(seeds[(through-1)*2+1] * sizeof(int));
+				real_seeds =
+					malloc(seeds[(through - 1) * 2 + 1] * sizeof(uint64_t));
+				edited = malloc(seeds[(through - 1) * 2 + 1] * sizeof(int));
 
-				for (int x = 0; x < seeds[(through-1)*2+1]; x++) {
-					real_seeds[x] = seeds[(through-1)*2] + x;
+				for (int x = 0; x < seeds[(through - 1) * 2 + 1]; x++) {
+					real_seeds[x] = seeds[(through - 1) * 2] + x;
 				}
 
 				for (int x = 0; x < 3; x++) {
@@ -163,7 +166,7 @@ int part_two() {
 				nums[0] = -1;
 			} else if (nums[0] != -1) {
 				if (buffer[i] == '\n') {
-					for (int x = 0; x < seeds[(through-1)*2+1]; x++) {
+					for (int x = 0; x < seeds[(through - 1) * 2 + 1]; x++) {
 						if (!edited[x] && real_seeds[x] >= nums[1] &&
 							real_seeds[x] < nums[1] + nums[2]) {
 							real_seeds[x] = real_seeds[x] - nums[1] + nums[0];
@@ -178,7 +181,7 @@ int part_two() {
 				id = (id + 1) % 3;
 			}
 		} else if (buffer[i] == ':' && seed_id == SEEDS_COUNT) {
-			for (int x = 0; x < seeds[(through-1)*2+1]; x++) {
+			for (int x = 0; x < seeds[(through - 1) * 2 + 1]; x++) {
 				edited[x] = 0;
 			}
 		}
@@ -188,10 +191,9 @@ int part_two() {
 	free(real_seeds);
 	free(edited);
 
-
 	uint64_t min = -1;
 
-	for (int i = 0; i < SEEDS_COUNT/2; i++) {
+	for (int i = 0; i < SEEDS_COUNT / 2; i++) {
 		if (lowests[i] < min) {
 			min = lowests[i];
 		}
