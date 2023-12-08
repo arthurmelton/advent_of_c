@@ -262,9 +262,6 @@ int part_two() {
 					(((uint64_t)(cards[i][2])) << (3 * 4)) +
 					(((uint64_t)(cards[i][3])) << (2 * 4)) +
 					(((uint64_t)(cards[i][4])) << (1 * 4));
-
-		// printf("%d %d %d %d %d - %d, %d, %ld\n", cards[i][0], cards[i][1],
-		// cards[i][2], cards[i][3], cards[i][4], bets[i], types[i], scores[i]);
 	}
 
 	int new_cards[HANDS][2] = {0};
@@ -288,9 +285,6 @@ int part_two() {
 	for (int i = 0; i < HANDS; i++) {
 		int index = new_cards[i][1];
 		total += bets[index] * (HANDS - i);
-		printf("%d %d %d %d %d - %d, %ld\n", cards[index][0], cards[index][1],
-			   cards[index][2], cards[index][3], cards[index][4], bets[index],
-			   scores[index]);
 	}
 
 	printf("Total with jack: %d\n", total);
