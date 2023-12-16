@@ -48,7 +48,7 @@ int part_one() {
 		}
 	}
 
-    free(data);
+	free(data);
 
 	printf("load: %d\n", load);
 
@@ -75,8 +75,8 @@ int part_two() {
 
 	fclose(fptr);
 
-    int previous_length = 0;
-    char *previous = NULL;
+	int previous_length = 0;
+	char *previous = NULL;
 
 	for (int i = 0; i < NTH; i++) {
 		for (int k = 0; k < 4; k++) {
@@ -107,32 +107,37 @@ int part_two() {
 			}
 		}
 
-        int found_match = 0;
+		int found_match = 0;
 
-        for (int k = 0; k < previous_length; k++) {
-            if (memcmp(&previous[k * (WIDTH + 1) * HEIGHT], data, (WIDTH + 1) * HEIGHT) == 0) {
-                found_match = 1;
-                memcpy(data, &previous[(WIDTH + 1) * HEIGHT * ((NTH - k) % (previous_length - k) + k - 1)], (WIDTH + 1) * HEIGHT);
-                break;
-            }
-        }
+		for (int k = 0; k < previous_length; k++) {
+			if (memcmp(&previous[k * (WIDTH + 1) * HEIGHT], data,
+					   (WIDTH + 1) * HEIGHT) == 0) {
+				found_match = 1;
+				memcpy(data,
+					   &previous[(WIDTH + 1) * HEIGHT *
+								 ((NTH - k) % (previous_length - k) + k - 1)],
+					   (WIDTH + 1) * HEIGHT);
+				break;
+			}
+		}
 
-        if (found_match) {
-            break;
-        }
+		if (found_match) {
+			break;
+		}
 
-        previous_length++;
-        previous = realloc(previous, previous_length * (WIDTH + 1) * HEIGHT);
+		previous_length++;
+		previous = realloc(previous, previous_length * (WIDTH + 1) * HEIGHT);
 
-        if (!previous) {
-            printf("Failed to realloc space for past array.\n");
-            return 1;
-        }
+		if (!previous) {
+			printf("Failed to realloc space for past array.\n");
+			return 1;
+		}
 
-        memcpy(&previous[(previous_length-1) * (WIDTH + 1) * HEIGHT], data, (WIDTH + 1) * HEIGHT);
+		memcpy(&previous[(previous_length - 1) * (WIDTH + 1) * HEIGHT], data,
+			   (WIDTH + 1) * HEIGHT);
 	}
 
-    free(previous);
+	free(previous);
 
 	int load = 0;
 
@@ -144,7 +149,7 @@ int part_two() {
 		}
 	}
 
-    free(data);
+	free(data);
 
 	printf("load: %d\n", load);
 
